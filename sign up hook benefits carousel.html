@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overlay Carousel Animation Demo</title>
+  <style>
+    /* Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,300&family=Inter:wght@300;400;600;700&display=swap');
+
+    :root {
+      --bg-color: #0e1225;
+      --card-bg: #e6e8eb;
+      --text-main: #232322;
+      --navy: #19223e;
+      --transition-speed: 0.5s;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text-main);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* Recreating the Overlay mockup style */
+    .overlay-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Top calculating bar */
+    .top-bar {
+      display: flex;
+      height: 38px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    
+    .calc-left {
+      width: 30%;
+      background: #ededed;
+      color: #717171;
+      display: flex;
+      align-items: center;
+      padding-left: 15px;
+    }
+
+    .calc-right {
+      width: 70%;
+      background: var(--navy);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 15px;
+    }
+
+    .card-content {
+      padding: 40px 35px 35px 35px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin: 0 0 16px 0;
+      text-transform: uppercase;
+      color: var(--text-main);
+    }
+
+    .subtitle {
+      font-size: 14px;
+      line-height: 1.5;
+      font-weight: 400;
+      color: #333332;
+      margin: 0 0 35px 0;
+      max-width: 380px;
+    }
+
+    /* Carousel Animation Section */
+    .carousel-section {
+      width: 100%;
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    /* Horizontal alignment of slots */
+    .icons-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 60px;
+      position: relative;
+    }
+
+    /* Individual Icon wrapper */
+    .icon-wrapper {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform var(--transition-speed) cubic-bezier(0.4, 0.0, 0.2, 1), 
+                  opacity var(--transition-speed) ease;
+      width: 80px;
+      height: 50px;
+    }
+
+    .icon-wrapper svg {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    /* Slot Positions */
+    .slot-left {
+      transform: translateX(-100px) scale(0.85);
+      opacity: 0.35;
+    }
+
+    .slot-middle {
+      transform: translateX(0) scale(1.2);
+      opacity: 1.0;
+    }
+
+    .slot-right {
+      transform: translateX(100px) scale(0.85);
+      opacity: 0.35;
+    }
+
+    /* Copy Transition container - Fixed height and baseline alignment */
+    .copy-container {
+      margin-top: 25px;
+      height: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      width: 100%;
+    }
+
+    /* Text Copy style using the Cormorant Garamond Font */
+    .copy-text-item {
+      position: absolute;
+      opacity: 0;
+      transition: opacity var(--transition-speed) ease; /* STRICTLY IN-PLACE CROSS-FADE */
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--text-main);
+      margin: 0;
+      white-space: nowrap;
+      text-shadow: 0 0 1px rgba(0,0,0,0.05);
+    }
+
+    .copy-text-item.active {
+      opacity: 1;
+    }
+
+    /* CTA Button & Links */
+    .btn-create-account {
+      background: #000000;
+      color: #ffffff;
+      width: 100%;
+      border: none;
+      padding: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 15px;
+      margin-bottom: 25px;
+      transition: background 0.2s ease;
+    }
+
+    .btn-create-account:hover {
+      background: #1c1c1b;
+    }
+
+    /* Lock Icon Swapping container */
+    .lock-icon-container {
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px; /* Matches the maximum width of lock 2 */
+      height: 27px; /* Matches lock 1A height */
+      position: relative;
+    }
+
+    .lock-icon-container svg {
+      position: absolute;
+    }
+
+    /* SVG State Control (via state classes on cta-btn) */
+    .lock-closed, .lock-active, .lock-open {
+      display: none;
+    }
+
+    /* Default (Locked State) */
+    #cta-btn:not(.active-lock):not(:hover) .lock-closed {
+      display: block;
+      width: 19px;
+      height: 24px;
+    }
+
+    /* Intermediate/Active Shift State (Syncs in between carousel transitions) */
+    #cta-btn.active-lock:not(:hover) .lock-active {
+      display: block;
+      width: 19px;
+      height: 27px;
+    }
+
+    /* Hover/Unlocked State */
+    #cta-btn:hover .lock-open {
+      display: block;
+      width: 34px;
+      height: 24px;
+    }
+
+    .links-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .links-container span {
+      color: #717171;
+    }
+
+    .links-container a {
+      color: var(--text-main);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      transition: opacity 0.2s ease;
+    }
+
+    .links-container a:hover {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Recreated Overlay Card -->
+    <div class="overlay-card">
+      <div class="top-bar">
+        <div class="calc-left">Calculating</div>
+        <div class="calc-right">30%</div>
+      </div>
+
+      <div class="card-content">
+        <h1>Save your results</h1>
+        <p class="subtitle">Create a free account while we calculate your score so it's ready when you return. Unlock all the benefits.</p>
+
+        <!-- Dynamic Carousel Animation Section -->
+        <div class="carousel-section">
+          <div class="icons-row">
+            <!-- Icon 1 (Cursor & Diamond) -->
+            <div id="icon-1" class="icon-wrapper">
+              <svg width="41" height="29" viewBox="0 0 41 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 8.70232V11.5972V14.4978H3.11049V11.5972V8.70232V5.80176H0V8.70232Z" fill="#232322"/>
+                <path d="M34.196 0H32.8359H31.0977H31.0855H27.9872H24.8767H21.7662H18.6557H18.6435H15.5452H15.533H12.4347H9.33035H9.31815H6.20767V2.90056H3.10938V5.80112H6.21986V2.90056H9.31815H9.33035H12.4347H15.533H15.5452H18.6435H18.6557H21.7662H24.8767H27.9872H31.0855H31.0977H32.8359H34.196V0Z" fill="#232322"/>
+                <path d="M37.3136 2.89746H34.2031V5.79802H37.3136V2.89746Z" fill="#232322"/>
+                <path d="M37.3136 14.5H34.2031V17.4006H37.3136V14.5Z" fill="#232322"/>
+                <path d="M34.1987 20.298V17.3975H31.1004H31.0882H27.9899V20.298V23.1986H24.8672V26.0991H27.9899V28.9997H31.1004V26.0991V23.1986V20.298H34.1987Z" fill="#232322"/>
+                <path d="M21.7607 20.298V17.3975H20.2055H18.6563H15.5458H14.0089H12.4353H9.33035H9.32485H6.22656V20.298H9.32485H9.33035H12.4353H14.0089H15.5458H18.6563H20.2055H21.7546V23.1986H24.8651V20.298H21.7607Z" fill="#232322"/>
+                <path d="M15.548 8.69824H12.4375V11.5988H15.548V8.69824Z" fill="#232322"/>
+                <path d="M21.7785 8.69824H18.668V11.5988H21.7785V8.69824Z" fill="#232322"/>
+                <path d="M27.9777 8.69824H24.8672V11.5988H27.9777V8.69824Z" fill="#232322"/>
+                <path d="M6.21986 14.5H3.10938V17.4006H6.21986V14.5Z" fill="#232322"/>
+                <path d="M37.3125 11.5972V14.4978H40.423V11.5972V8.70232V5.80176H37.3125V8.70232V11.5972Z" fill="#232322"/>
+              </svg>
+            </div>
+
+            <!-- Icon 2 (Message Bubble) -->
+            <div id="icon-2" class="icon-wrapper">
+              <svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.44638 3.72363H3.72266V7.44736H7.44638V3.72363Z" fill="#232322"/>
+                <path d="M0 11.1768V14.9085V18.6323H3.72372V14.9085V11.1768V7.45312H0V11.1768Z" fill="#232322"/>
+                <path d="M14.9085 0H11.1768H7.45312V3.72372H11.1768H14.9085H18.6243V7.4554H22.348V3.72372H18.6323V0H14.9085Z" fill="#232322"/>
+                <path d="M11.1768 26.0911H14.9085H18.6323V22.3674H22.348V18.6357H18.6243V22.3674H14.9085H11.1768H7.45312V26.0911H11.1768Z" fill="#232322"/>
+                <path d="M7.44638 18.6357H3.72266V22.3595H7.44638V18.6357Z" fill="#232322"/>
+                <path d="M26.087 14.9085V11.1768V7.45312H22.3633V11.1768V14.9085V18.6323H26.087V14.9085Z" fill="#232322"/>
+                <path d="M26.087 22.3652H22.3633V26.089H26.087V22.3652Z" fill="#232322"/>
+                <path d="M26.0898 33.5443H29.8215V37.268H33.5452V40.9997H37.269H41.0007V37.268V33.5443H37.269V29.8205H33.5452V26.0889H29.8215H26.0898V29.8205V33.5443Z" fill="#232322"/>
+              </svg>
+            </div>
+
+            <!-- Icon 3 (Magnifying Glass) -->
+            <div id="icon-3" class="icon-wrapper">
+              <svg width="56" height="29" viewBox="0 0 56 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M55.7597 11.4102H50.0078V17.1621H55.7597V11.4102Z" fill="#232322"/>
+                <path d="M44.2519 11.4102H38.5V17.1621H44.2519V11.4102Z" fill="#232322"/>
+                <path d="M50.0136 5.66406H44.2617V11.416H50.0136V5.66406Z" fill="#232322"/>
+                <path d="M50.0136 17.1699H44.2617V22.9218H50.0136V17.1699Z" fill="#232322"/>
+                <path d="M23.0175 0H17.2656V5.75189H23.0175V0Z" fill="#232322"/>
+                <path d="M28.7708 11.498V5.74609H23.0189V11.498H0V17.2612H23.0189V23.0131H28.7708V17.2612H34.5227V11.498H28.7708Z" fill="#232322"/>
+                <path d="M23.0175 23.0127H17.2656V28.7646H23.0175V23.0127Z" fill="#232322"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Dynamic Text Copy Section (Fixed heights, baselines, and in-place transition) -->
+          <div class="copy-container">
+            <h2 id="copy-1" class="copy-text-item">Decode your relationships</h2>
+            <h2 id="copy-2" class="copy-text-item">Discover who you are</h2>
+            <h2 id="copy-3" class="copy-text-item">Meet your future self</h2>
+          </div>
+        </div>
+
+        <!-- Create Account CTA with Vector Lock Animation Swap -->
+        <button class="btn-create-account" id="cta-btn">
+          <span class="lock-icon-container">
+            <!-- lock 1.svg (Locked state) -->
+            <svg class="lock-closed" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.6942 5.32324V10.6147H0V23.9272H18.3098V5.32324H15.6942ZM10.4627 21.2646H7.8471V13.3403H10.4627V21.2646Z" fill="white"/>
+              <path d="M2.64217 2.66113H5.25781V5.32355H2.64217V2.66113Z" fill="white"/>
+              <path d="M2.64844 7.98566V5.32324H0.032791V7.98566V10.6147H2.64844V7.98566Z" fill="white"/>
+              <path d="M13.107 2.66113H15.7227V5.32355H13.107V2.66113Z" fill="white"/>
+              <path d="M5.25837 0H13.1055V2.66242H5.25837V0Z" fill="white"/>
+            </svg>
+
+            <!-- lock 1A.svg (Shifted/Active state) -->
+            <svg class="lock-active" viewBox="0 0 19 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.6942 7.63477V12.9263H0V26.2387H18.3098V7.63477H15.6942ZM10.4627 23.5761H7.8471V15.6518H10.4627V23.5761Z" fill="white"/>
+              <path d="M2.64217 2.66113H5.25781V5.32355H2.64217V2.66113Z" fill="white"/>
+              <path d="M2.64844 7.98566V5.32324H0.032791V7.98566V10.6147H2.64844V7.98566Z" fill="white"/>
+              <path d="M13.107 2.66113H15.7227V5.32355H13.107V2.66113Z" fill="white"/>
+              <path d="M15.6929 5.30762H18.3086V7.97004H15.6929V5.30762Z" fill="white"/>
+              <path d="M5.25837 0H13.1055V2.66242H5.25837V0Z" fill="white"/>
+            </svg>
+
+            <!-- lock 2.svg (Unlocked state) -->
+            <svg class="lock-open" viewBox="0 0 34 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15.6942 5.31934V10.6108H0V23.9233H18.3098V5.31934H15.6942ZM10.4627 21.2607H7.8471V13.3363H10.4627V21.2607Z" fill="white"/>
+              <path d="M31.3969 2.66113H28.7812V5.32355H31.3969V2.66113Z" fill="white"/>
+              <path d="M31.3906 7.98566V5.32324H34.0063V7.98566V10.6147H31.3906V7.98566Z" fill="white"/>
+              <path d="M20.9321 2.66113H18.3164V5.32355H20.9321V2.66113Z" fill="white"/>
+              <path d="M28.7807 0H20.9336V2.66242H28.7807V0Z" fill="white"/>
+            </svg>
+          </span>
+          Create Account
+        </button>
+
+        <div class="links-container">
+          <div>Already have an account? <a href="#">Log in</a></div>
+          <div>or <a href="#">Continue as guest</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // State management
+    const icon1 = document.getElementById('icon-1');
+    const icon2 = document.getElementById('icon-2');
+    const icon3 = document.getElementById('icon-3');
+
+    const copy1 = document.getElementById('copy-1');
+    const copy2 = document.getElementById('copy-2');
+    const copy3 = document.getElementById('copy-3');
+
+    const icons = [icon1, icon2, icon3];
+    const copies = [copy1, copy2, copy3];
+    const slotClasses = ['slot-left', 'slot-middle', 'slot-right'];
+
+    const stateSlots = [
+      [1, 2, 0], // State 1: Icon 1 in middle, Icon 2 in right, Icon 3 in left
+      [0, 1, 2], // State 2: Icon 1 in left, Icon 2 in middle, Icon 3 in right
+      [2, 0, 1]  // State 3: Icon 1 in right, Icon 2 in left, Icon 3 in middle
+    ];
+
+    let currentState = 0;
+    const ctaBtn = document.getElementById('cta-btn');
+
+    function updateCarousel() {
+      const slots = stateSlots[currentState];
+      
+      icons.forEach((icon, index) => {
+        icon.classList.remove(...slotClasses);
+        const slotIdx = slots[index];
+        icon.classList.add(slotClasses[slotIdx]);
+      });
+
+      copies.forEach((copy, index) => {
+        if (index === currentState) {
+          copy.classList.add('active');
+        } else {
+          copy.classList.remove('active');
+        }
+      });
+
+      // Trigger intermediate lock bounce (lock 1A.svg) exactly halfway through the 2.0s loop cycle
+      setTimeout(() => {
+        ctaBtn.classList.add('active-lock');
+        setTimeout(() => {
+          ctaBtn.classList.remove('active-lock');
+        }, 350); // Kept on for the duration of the transition
+      }, 1000); // 1.0 second offset from the carousel shift (exactly mid-wait)
+    }
+
+    function rotateNext() {
+      currentState = (currentState + 1) % 3;
+      updateCarousel();
+    }
+
+    // Initialize first state
+    updateCarousel();
+    setInterval(rotateNext, 2000);
+  </script>
+</body>
+</html>
