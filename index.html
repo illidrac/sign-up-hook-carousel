@@ -35,7 +35,7 @@
       box-sizing: border-box;
     }
 
-    /* Recreating the Overlay mockup style */
+    /* Overlay Card Style */
     .overlay-card {
       background: var(--card-bg);
       border-radius: 8px;
@@ -47,7 +47,7 @@
       position: relative;
     }
 
-    /* Top calculating bar */
+    /* Top Calculating Bar */
     .top-bar {
       display: flex;
       height: 38px;
@@ -141,7 +141,7 @@
       max-height: 100%;
     }
 
-    /* Slot Positions */
+    /* Slot Positions (Horizontal Translate + Scale + Opacity) */
     .slot-left {
       transform: translateX(-100px) scale(0.85);
       opacity: 0.35;
@@ -157,7 +157,7 @@
       opacity: 0.35;
     }
 
-    /* Copy Transition container - Fixed height and baseline alignment */
+    /* Copy Transition container - Baseline aligned */
     .copy-container {
       margin-top: 25px;
       height: 35px;
@@ -168,11 +168,11 @@
       width: 100%;
     }
 
-    /* Text Copy style using the Cormorant Garamond Font */
+    /* Text Copy style using Cormorant Garamond Italic 300 */
     .copy-text-item {
       position: absolute;
       opacity: 0;
-      transition: opacity var(--transition-speed) ease; /* STRICTLY IN-PLACE CROSS-FADE */
+      transition: opacity var(--transition-speed) ease; /* In-place crossfade */
       font-family: 'Cormorant Garamond', serif;
       font-size: 26px;
       font-style: italic;
@@ -187,7 +187,7 @@
       opacity: 1;
     }
 
-    /* CTA Button & Links */
+    /* CTA Button */
     .btn-create-account {
       background: #000000;
       color: #ffffff;
@@ -210,47 +210,6 @@
 
     .btn-create-account:hover {
       background: #1c1c1b;
-    }
-
-    /* Lock Icon Swapping container */
-    .lock-icon-container {
-      margin-right: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px; /* Matches the maximum width of lock 2 */
-      height: 27px; /* Matches lock 1A height */
-      position: relative;
-    }
-
-    .lock-icon-container svg {
-      position: absolute;
-    }
-
-    /* SVG State Control (via state classes on cta-btn) */
-    .lock-closed, .lock-active, .lock-open {
-      display: none;
-    }
-
-    /* Default (Locked State) */
-    #cta-btn:not(.active-lock):not(:hover) .lock-closed {
-      display: block;
-      width: 19px;
-      height: 24px;
-    }
-
-    /* Intermediate/Active Shift State (Syncs in between carousel transitions) */
-    #cta-btn.active-lock:not(:hover) .lock-active {
-      display: block;
-      width: 19px;
-      height: 27px;
-    }
-
-    /* Hover/Unlocked State */
-    #cta-btn:hover .lock-open {
-      display: block;
-      width: 34px;
-      height: 24px;
     }
 
     .links-container {
@@ -282,7 +241,7 @@
 <body>
 
   <div class="container">
-    <!-- Recreated Overlay Card -->
+    <!-- Overlay Card -->
     <div class="overlay-card">
       <div class="top-bar">
         <div class="calc-left">Calculating</div>
@@ -304,7 +263,7 @@
                 <path d="M37.3136 2.89746H34.2031V5.79802H37.3136V2.89746Z" fill="#232322"/>
                 <path d="M37.3136 14.5H34.2031V17.4006H37.3136V14.5Z" fill="#232322"/>
                 <path d="M34.1987 20.298V17.3975H31.1004H31.0882H27.9899V20.298V23.1986H24.8672V26.0991H27.9899V28.9997H31.1004V26.0991V23.1986V20.298H34.1987Z" fill="#232322"/>
-                <path d="M21.7607 20.298V17.3975H20.2055H18.6563H15.5458H14.0089H12.4353H9.33035H9.32485H6.22656V20.298H9.32485H9.33035H12.4353H14.0089H15.5458H18.6563H20.2055H21.7546V23.1986H24.8651V20.298H21.7607Z" fill="#232322"/>
+                <path d="M21.7607 20.298V17.3975H20.2055H18.6563H15.5458H14.0089H12.4353H9.33705H9.32485H6.22656V20.298H9.32485H9.33035H12.4353H14.0089H15.5458H18.6563H20.2055H21.7546V23.1986H24.8651V20.298H21.7607Z" fill="#232322"/>
                 <path d="M15.548 8.69824H12.4375V11.5988H15.548V8.69824Z" fill="#232322"/>
                 <path d="M21.7785 8.69824H18.668V11.5988H21.7785V8.69824Z" fill="#232322"/>
                 <path d="M27.9777 8.69824H24.8672V11.5988H27.9777V8.69824Z" fill="#232322"/>
@@ -349,37 +308,8 @@
           </div>
         </div>
 
-        <!-- Create Account CTA with Vector Lock Animation Swap -->
+        <!-- Create Account CTA (No lock icon) -->
         <button class="btn-create-account" id="cta-btn">
-          <span class="lock-icon-container">
-            <!-- lock 1.svg (Locked state) -->
-            <svg class="lock-closed" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.6942 5.32324V10.6147H0V23.9272H18.3098V5.32324H15.6942ZM10.4627 21.2646H7.8471V13.3403H10.4627V21.2646Z" fill="white"/>
-              <path d="M2.64217 2.66113H5.25781V5.32355H2.64217V2.66113Z" fill="white"/>
-              <path d="M2.64844 7.98566V5.32324H0.032791V7.98566V10.6147H2.64844V7.98566Z" fill="white"/>
-              <path d="M13.107 2.66113H15.7227V5.32355H13.107V2.66113Z" fill="white"/>
-              <path d="M5.25837 0H13.1055V2.66242H5.25837V0Z" fill="white"/>
-            </svg>
-
-            <!-- lock 1A.svg (Shifted/Active state) -->
-            <svg class="lock-active" viewBox="0 0 19 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.6942 7.63477V12.9263H0V26.2387H18.3098V7.63477H15.6942ZM10.4627 23.5761H7.8471V15.6518H10.4627V23.5761Z" fill="white"/>
-              <path d="M2.64217 2.66113H5.25781V5.32355H2.64217V2.66113Z" fill="white"/>
-              <path d="M2.64844 7.98566V5.32324H0.032791V7.98566V10.6147H2.64844V7.98566Z" fill="white"/>
-              <path d="M13.107 2.66113H15.7227V5.32355H13.107V2.66113Z" fill="white"/>
-              <path d="M15.6929 5.30762H18.3086V7.97004H15.6929V5.30762Z" fill="white"/>
-              <path d="M5.25837 0H13.1055V2.66242H5.25837V0Z" fill="white"/>
-            </svg>
-
-            <!-- lock 2.svg (Unlocked state) -->
-            <svg class="lock-open" viewBox="0 0 34 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15.6942 5.31934V10.6108H0V23.9233H18.3098V5.31934H15.6942ZM10.4627 21.2607H7.8471V13.3363H10.4627V21.2607Z" fill="white"/>
-              <path d="M31.3969 2.66113H28.7812V5.32355H31.3969V2.66113Z" fill="white"/>
-              <path d="M31.3906 7.98566V5.32324H34.0063V7.98566V10.6147H31.3906V7.98566Z" fill="white"/>
-              <path d="M20.9321 2.66113H18.3164V5.32355H20.9321V2.66113Z" fill="white"/>
-              <path d="M28.7807 0H20.9336V2.66242H28.7807V0Z" fill="white"/>
-            </svg>
-          </span>
           Create Account
         </button>
 
@@ -412,7 +342,6 @@
     ];
 
     let currentState = 0;
-    const ctaBtn = document.getElementById('cta-btn');
 
     function updateCarousel() {
       const slots = stateSlots[currentState];
@@ -430,14 +359,6 @@
           copy.classList.remove('active');
         }
       });
-
-      // Trigger intermediate lock bounce (lock 1A.svg) exactly halfway through the 2.0s loop cycle
-      setTimeout(() => {
-        ctaBtn.classList.add('active-lock');
-        setTimeout(() => {
-          ctaBtn.classList.remove('active-lock');
-        }, 350); // Kept on for the duration of the transition
-      }, 1000); // 1.0 second offset from the carousel shift (exactly mid-wait)
     }
 
     function rotateNext() {
